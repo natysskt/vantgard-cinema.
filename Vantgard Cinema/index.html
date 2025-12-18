@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍿</text></svg>">
+    <title> Vantgard Cinema | O CINEMA PARA TODOS</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --accent: #7000ff;
+            --bg: #020617;
+            --border: rgba(0, 242, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0; width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%; background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(15px); border-bottom: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem; color: #fff; text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a { text-decoration: none; color: #94a3b8; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* HEADER */
+       header {
+    height: 70vh;
+    display: flex; align-items: center; justify-content: center;
+    /* Adicionamos a foto das poltronas com um degradê para não atrapalhar a leitura do título */
+    background: linear-gradient(rgba(2, 6, 23, 0.7), rgba(2, 6, 23, 0.8)), 
+                url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1500');
+    background-size: cover; 
+    background-position: center;
+    background-attachment: fixed; /* Efeito Parallax: a imagem corre mais devagar que o site */
+    text-align: center; 
+    padding-top: 80px;
+}
+
+        .hero-content h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 12vw, 8rem);
+            margin: 0; color: #fff;
+            filter: drop-shadow(0 0 25px rgba(0, 242, 255, 0.6));
+            line-height: 1;
+        }
+
+        .hero-btns {
+            display: flex; gap: 15px; justify-content: center; margin-top: 30px;
+        }
+
+        .btn-main {
+            background: var(--primary); color: #000; border: none; padding: 14px 30px;
+            border-radius: 10px; font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem; cursor: pointer; font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent; color: #fff; border: 2px solid #fff; padding: 14px 30px;
+            border-radius: 10px; font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem; cursor: pointer;
+        }
+
+        .btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+        /* VITRINE DE FILMES */
+        .main-container { padding: 60px 5%; }
+        .section-title { 
+            font-family: 'Bebas Neue', sans-serif; 
+            font-size: 3rem; color: var(--primary); 
+            margin-bottom: 40px;
+            border-left: 5px solid var(--primary);
+            padding-left: 20px;
+        }
+
+        .movie-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 35px;
+        }
+
+        .movie-card {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 20px; overflow: hidden; position: relative;
+        }
+
+        .movie-card:hover { 
+            transform: translateY(-15px); 
+            border-color: var(--primary); 
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); 
+        }
+
+        .movie-card img { width: 100%; height: 400px; object-fit: cover; }
+        .card-body { padding: 20px; text-align: center; }
+
+        .btn-ticket {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: #000; border: none; width: 100%; padding: 12px;
+            border-radius: 12px; font-family: 'Bebas Neue', sans-serif; 
+            font-size: 1.2rem; font-weight: bold; cursor: pointer;
+        }
+
+        /* MODAL DE ASSENTOS */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-assentos {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #0f172a;
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 50px rgba(0, 242, 255, 0.2);
+            z-index: 3000;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .tela {
+            width: 100%; height: 4px;
+            background: var(--primary);
+            margin: 20px 0 30px;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .assentos-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .poltrona {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #334155;
+            border-radius: 6px 6px 2px 2px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .poltrona:hover { background: #475569; }
+        .poltrona.selecionada { 
+            background: var(--primary); 
+            box-shadow: 0 0 12px var(--primary);
+        }
+
+        /* NEWSLETTER */
+        .newsletter {
+            padding: 100px 5%; background: radial-gradient(circle at top, #1e293b, var(--bg));
+            text-align: center; border-top: 1px solid var(--border);
+        }
+        .input-group { display: flex; max-width: 500px; margin: 40px auto; gap: 10px; }
+        .input-group input { flex: 1; padding: 15px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; }
+        .btn-sub { background: var(--primary); color: #000; padding: 0 25px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="nav-brand">VANTGARD<span style="color:var(--primary)">.</span></a>
+        <ul class="nav-links">
+            <li><a href="#">Cinemas</a></li>
+            <li><a href="#">Programação</a></li>
+            <li><a href="#">Parcerias</a></li>
+            <li><a href="#">Unidades</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <div class="hero-content">
+            <h1>VANTGARD</h1>
+            <p style="letter-spacing: 12px; color: var(--primary); font-size: 1rem; margin-top: 10px;">O CINEMA PARA TODOS</p>
+            <div class="hero-btns">
+                <button class="btn-main" onclick="abrirModal()">COMPRAR INGRESSOS</button>
+                <button class="btn-outline">ASSISTIR TRAILER</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <h2 class="section-title">EM CARTAZ</h2>
+        <div class="movie-grid">
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1568417847905-1ba5effadab1?q=80&w=400">
+                <div class="card-body"><h3>JOKER</h3><button class="btn-ticket">Tickets</button></div>
+            </div>
+            <div class="movie-card">
+                <img src="https://images.pexels.com/photos/2156/sky-earth-space-working.jpg">
+                <div class="card-body"><h3>INTERESTELAR</h3><button class="btn-ticket">Tickets</button></div>
+            </div>
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1588860939994-ce4f7a537f03?q=80&w=400">
+                <div class="card-body"><h3>THE BATMAN</h3><button class="btn-ticket">Tickets</button></div>
+            </div>
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1691316749874-e89297ee4cf3?q=80&w=400">
+                <div class="card-body"><h3>OPPENHEIMER</h3><button class="btn-ticket">Tickets</button></div>
+            </div>
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1607490703747-0519d2e398a1?q=80&w=400">
+                <div class="card-body"><h3>REI LEÃO</h3><button class="btn-ticket">Tickets</button></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="overlay" id="overlay" onclick="fecharModal()"></div>
+    <div class="modal-assentos" id="modalAssentos">
+        <h2 style="font-family: 'Bebas Neue'; color: var(--primary); margin: 0;">ESCOLHA SEU LUGAR</h2>
+        <div class="tela"></div>
+        <div class="assentos-grid" id="gridAssentos"></div>
+        <button class="btn-main" style="width: 100%;" onclick="confirmar()">CONFIRMAR RESERVA</button>
+        <button onclick="fecharModal()" style="background:none; border:none; color:#94a3b8; cursor:pointer; margin-top:15px; width:100%; font-size: 0.9rem;">Voltar</button>
+    </div>
+
+    <section id="cadastro" class="newsletter">
+        <h2 style="font-family:'Bebas Neue'; font-size: 3rem">JUNTE-SE AO CLUBE</h2>
+        <p>Receba convites VIP diretamente no seu e-mail.</p>
+        <div class="input-group">
+            <input type="email" placeholder="Seu melhor e-mail">
+            <button class="btn-sub">ASSINAR</button>
+        </div>
+    </section>
+
+    <script>
+        const overlay = document.getElementById('overlay');
+        const modal = document.getElementById('modalAssentos');
+        const grid = document.getElementById('gridAssentos');
+
+        // Cria as poltronas
+        for (let i = 0; i < 40; i++) {
+            const poltrona = document.createElement('div');
+            poltrona.classList.add('poltrona');
+            poltrona.onclick = function() {
+                this.classList.toggle('selecionada');
+            }
+            grid.appendChild(poltrona);
+        }
+
+        // Função abrir modal
+        function abrirModal() {
+            overlay.style.display = 'block';
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Trava o scroll do fundo
+        }
+
+        // Conecta todos os botões "Tickets" dos filmes
+        document.querySelectorAll('.btn-ticket').forEach(botao => {
+            botao.addEventListener('click', abrirModal);
+        });
+
+        function fecharModal() {
+            overlay.style.display = 'none';
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Destrava o scroll
+        }
+
+        function confirmar() {
+            const selecionadas = document.querySelectorAll('.poltrona.selecionada').length;
+            if(selecionadas > 0) {
+                alert(`Reserva de ${selecionadas} lugares confirmada! Aproveite a sessão.`);
+                fecharModal();
+            } else {
+                alert("Selecione pelo menos um assento para continuar.");
+            }
+        }
+    </script>
+</body>
+</html>
